@@ -51,3 +51,7 @@ tGPT on first run will ask for your OpenAI api key which you can set up to then 
 ✨ Improve the output with better formatting for better readability
 
 🔍 Search for past conversations
+
+## Support the project
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/takrutvik)
