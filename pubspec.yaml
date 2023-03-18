@@ -1,0 +1,20 @@
+name: terminalgpt
+description: A sample command-line application.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ">=2.19.2 <3.0.0"
+executables:
+  tgpt: terminalgpt
+# dependencies:
+#   path: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+dependencies:
+  args: ^2.4.0
+  http: ^0.13.5
+  mason_logger: ^0.2.5
+  process_run: ^0.12.5+2
