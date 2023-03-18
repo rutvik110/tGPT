@@ -15,10 +15,14 @@ class ChatMessage {
 }
 
 final logger = Logger();
+
+late Directory appDir;
 void main(List<String> arguments) async {
   logger.write('\nWelcome to tGPT!\n');
 
   var parser = ArgParser();
+  appDir = Directory.systemTemp;
+
   parser.addOption('input', abbr: 'i');
   parser.addFlag('model', abbr: "m", negatable: false);
   parser.addFlag('updateKey', abbr: "u", negatable: false);
@@ -46,7 +50,7 @@ void main(List<String> arguments) async {
     exit(0);
   }
   if (args["clear"]) {
-    final chatjson = File(path.join(Directory.current.path, 'chat.json'));
+    final chatjson = File(path.join(appDir.path, 'chat.json'));
     chatjson.deleteSync();
   }
   if (args["updateKey"]) {
@@ -117,7 +121,7 @@ Future<void> runRequest(String input, String apiKey, String modelId) async {
 
 Future<String?> readApiKeyFromStorage() async {
   try {
-    var apiKeyFile = File(path.join(Directory.current.path, 'api_key.txt'));
+    var apiKeyFile = File(path.join(appDir.path, 'api_key.txt'));
     if (await apiKeyFile.exists()) {
       return await apiKeyFile.readAsString();
     }
@@ -127,8 +131,7 @@ Future<String?> readApiKeyFromStorage() async {
 
 Future<String?> readModelIdFromStorage() async {
   try {
-    var apiKeyFile =
-        File(path.join(Directory.current.path, 'terminal_gpt_model_id.txt'));
+    var apiKeyFile = File(path.join(appDir.path, 'terminal_gpt_model_id.txt'));
     if (await apiKeyFile.exists()) {
       return await apiKeyFile.readAsString();
     }
@@ -138,15 +141,14 @@ Future<String?> readModelIdFromStorage() async {
 
 Future<void> writeApiKeyToStorage(String apiKey) async {
   try {
-    var apiKeyFile = File(path.join(Directory.current.path, 'api_key.txt'));
+    var apiKeyFile = File(path.join(appDir.path, 'api_key.txt'));
     await apiKeyFile.writeAsString(apiKey);
   } catch (_) {}
 }
 
 Future<void> writeModelIdToStorage(String modelId) async {
   try {
-    var apiKeyFile =
-        File(path.join(Directory.current.path, 'terminal_gpt_model_id.txt'));
+    var apiKeyFile = File(path.join(appDir.path, 'terminal_gpt_model_id.txt'));
     await apiKeyFile.writeAsString(modelId);
   } catch (_) {}
 }
@@ -216,7 +218,7 @@ Future<String> callOpenAiApi(
 }
 
 Future<List<Map<String, dynamic>>> retrieveChatHistory() async {
-  final chatjson = File(path.join(Directory.current.path, 'chat.json'));
+  final chatjson = File(path.join(appDir.path, 'chat.json'));
   // chatjson.deleteSync();
   if (await chatjson.exists()) {
     final jsonContent = await chatjson.readAsString();
@@ -232,7 +234,7 @@ Future<List<Map<String, dynamic>>> retrieveChatHistory() async {
 }
 
 Future<ChatMessage> saveMessage(ChatMessage message) async {
-  final chatjson = File(path.join(Directory.current.path, 'chat.json'));
+  final chatjson = File(path.join(appDir.path, 'chat.json'));
   if (await chatjson.exists()) {
     final jsonContent = await chatjson.readAsString();
     final jsonMap = jsonDecode(jsonContent) as Map<String, dynamic>;
