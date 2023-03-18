@@ -171,7 +171,6 @@ Future<String> callOpenAiApi(
     input.trim(),
     "user",
   );
-  var client = HttpClient();
   stdout.writeln("\n${backgroundBlue.wrap("Input")!}:$input");
   final chatHistory = await retrieveChatHistory();
   stdout.writeln("Chat History: ${chatHistory.length}");
@@ -179,12 +178,7 @@ Future<String> callOpenAiApi(
     "role": userMessage.speaker,
     "content": userMessage.text,
   });
-  // final List<Map<String, dynamic>> chatmessagesend = chatHistory.map((e) {
-  //   return {
-  //     "role": e["role"],
-  //     "content": jsonEncode(e["content"]),
-  //   };
-  // }).toList();
+
   final progress = logger.progress('Calling OpenAI API...');
   final responce = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
@@ -204,7 +198,6 @@ Future<String> callOpenAiApi(
   progress.complete();
 
   var responseJson = jsonDecode(responce.body);
-  stdout.writeln(responseJson);
 
   final recievedAssistanMessage = ChatMessage(
     (responseJson['choices'][0]['message']["content"] as String),
