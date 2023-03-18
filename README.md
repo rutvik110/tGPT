@@ -1,5 +1,10 @@
 ## 🤖 **tGPT** - Your coding assistant in terminal
 
+
+https://user-images.githubusercontent.com/65209850/226115287-33c1b39c-5350-42d4-8a9e-09049ac87a1e.mp4
+
+
+
 tGPT offers simple terminal experience which can speed up your coding as you won't have to leave your terminal again. 
 
 🔑 You can use tGPT with your own OpenAI api key. Your key and all of your data is stored locally on your device.
