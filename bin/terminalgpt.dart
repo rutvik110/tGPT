@@ -225,7 +225,6 @@ Future<String> callOpenAiApi(
   var responseJson = jsonDecode(responce.body);
 
   final error = responseJson['error'];
-
   if (error != null) {
     throw Exception(error);
   }
