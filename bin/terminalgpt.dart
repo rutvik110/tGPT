@@ -31,7 +31,7 @@ void main(List<String> arguments) async {
 
   var args = parser.parse(arguments);
 
-  var apiKey = await readApiKeyFromStorage();
+  String? apiKey = await readApiKeyFromStorage();
 
   if (apiKey == null) {
     apiKey = await promptForApiKey();
@@ -109,11 +109,11 @@ Future<void> runRequest(String input, String apiKey, String modelId) async {
   // while (true) {
 
   try {
-    var response = await callOpenAiApi(input, apiKey, modelId);
+    final response = await callOpenAiApi(input, apiKey, modelId);
 
-    var codes = extractTextCodePairs(response);
+    final codes = extractTextCodePairs(response);
 
-    var editedCode = await promptForCodeEdit(codes);
+    await promptForCodeEdit(codes);
   } catch (e) {
     logger.err('Error calling the OpenAI API: $e');
   }
@@ -206,8 +206,7 @@ Future<String> callOpenAiApi(
   await saveMessage(userMessage);
   await saveMessage(recievedAssistanMessage);
 
-  // logger.success(responseJson.toString());
-  return responseJson['choices'][0]['message']["content"];
+  return recievedAssistanMessage.text;
 }
 
 Future<List<Map<String, dynamic>>> retrieveChatHistory() async {
@@ -275,7 +274,7 @@ List<TextCodeModel> extractTextCodePairs(String input) {
   return pairs;
 }
 
-Future<String> promptForCodeEdit(List<TextCodeModel> codes) async {
+Future<void> promptForCodeEdit(List<TextCodeModel> codes) async {
   logger.success("\n------------------------\n");
 
   for (final model in codes) {
@@ -285,8 +284,6 @@ Future<String> promptForCodeEdit(List<TextCodeModel> codes) async {
     logger.success(model.code ?? "");
     print('');
   }
-
-  return codes.first.code ?? "";
 }
 
 Future<bool> promptToRunCode() async {
