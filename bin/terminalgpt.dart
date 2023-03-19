@@ -50,15 +50,27 @@ void main(List<String> arguments) async {
     exit(0);
   }
   if (args["clear"]) {
+    final progress = logger.progress("Cleaning chat history...");
     final chatjson = File(path.join(appDir.path, 'chat.json'));
-    chatjson.deleteSync();
+    try {
+      chatjson.deleteSync();
+    } catch (e) {
+      logger.err('Error occured: $e');
+    }
+    progress.complete("Chat history cleaned.");
   }
   if (args["updateKey"]) {
     apiKey = await promptForApiKey();
     await writeApiKeyToStorage(apiKey);
   }
   String? modelId = await readModelIdFromStorage();
-  modelId ??= await updateSelectedModel(apiKey);
+
+  try {
+    modelId ??= await updateSelectedModel(apiKey);
+  } catch (e) {
+    logger.err('Error occured: $e');
+    exit(1);
+  }
   logger.info(backgroundBlue.wrap('Using model: $modelId'));
 
   var input = args['input'] ?? await promptUserInput(false);
@@ -78,12 +90,25 @@ Future<String> updateSelectedModel(String apiKey) async {
 }
 
 Future<List<ChatModel>> listModels(String apiKey) async {
+  final progress = logger.progress("Getting chat models...");
+
   var response = await http.get(
-      Uri.parse('https://api.openai.com/v1/models?model_type=chat'),
-      headers: {'Authorization': 'Bearer $apiKey'});
+    Uri.parse('https://api.openai.com/v1/models?model_type=chat'),
+    headers: {'Authorization': 'Bearer $apiKey'},
+  );
+  progress.complete("Done");
   var jsonResponse = json.decode(response.body);
+
+  final errorMessage = jsonResponse['error'];
+
+  if (errorMessage != null) {
+    throw Exception(errorMessage);
+  }
+  final data = jsonResponse['data'];
+
   return parseModels(
-      List.castFrom<dynamic, Map<String, dynamic>>(jsonResponse['data']));
+    List.castFrom<dynamic, Map<String, dynamic>>(data),
+  );
 }
 
 class ChatModel {
@@ -115,7 +140,7 @@ Future<void> runRequest(String input, String apiKey, String modelId) async {
 
     await promptForCodeEdit(codes);
   } catch (e) {
-    logger.err('Error calling the OpenAI API: $e');
+    logger.err('Error occured: $e');
   }
 }
 
@@ -154,7 +179,7 @@ Future<void> writeModelIdToStorage(String modelId) async {
 }
 
 Future<String> promptForApiKey() async {
-  stdout.write('Please enter your OpenAI API key: ');
+  stdout.write('Please enter your OpenAI api key: ');
   return stdin.readLineSync()!;
 }
 
@@ -179,7 +204,7 @@ Future<String> callOpenAiApi(
     "content": userMessage.text,
   });
 
-  final progress = logger.progress('Calling OpenAI API...');
+  final progress = logger.progress('Waiting for responce...');
   final responce = await http.post(
       Uri.parse('https://api.openai.com/v1/chat/completions'),
       headers: <String, String>{
@@ -211,15 +236,15 @@ Future<String> callOpenAiApi(
 
 Future<List<Map<String, dynamic>>> retrieveChatHistory() async {
   final chatjson = File(path.join(appDir.path, 'chat.json'));
-  // chatjson.deleteSync();
+
   if (await chatjson.exists()) {
     final jsonContent = await chatjson.readAsString();
     final jsonMap = jsonDecode(jsonContent) as Map<String, dynamic>?;
-    final messages = jsonMap?['messages'] as List<dynamic>?;
-
-    return messages == null
+    final messages = jsonMap?['messages'] == null
         ? []
-        : messages.map((e) => e as Map<String, dynamic>).toList();
+        : jsonMap!['messages'] as List<dynamic>;
+
+    return messages.map((e) => e as Map<String, dynamic>).toList();
   } else {
     return [];
   }
