@@ -224,6 +224,12 @@ Future<String> callOpenAiApi(
 
   var responseJson = jsonDecode(responce.body);
 
+  final error = responseJson['error'];
+
+  if (error != null) {
+    throw Exception(error);
+  }
+
   final recievedAssistanMessage = ChatMessage(
     (responseJson['choices'][0]['message']["content"] as String),
     (responseJson['choices'][0]["message"]['role'] as String),
