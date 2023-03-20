@@ -1,6 +1,6 @@
 name: terminalgpt
-description: A sample command-line application.
-version: 1.0.0
+description: Access ChatGPT from your terminal.
+version: 0.0.2
 repository: https://github.com/rutvik110/tGPT
 
 environment:

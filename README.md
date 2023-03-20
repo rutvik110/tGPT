@@ -1,5 +1,11 @@
 ## 🤖 **tGPT** - Your coding assistant in terminal
 
+<p align="center">
+	<a href="https://github.com/rutvik110/tGPT"  target="_blank"><img src="https://img.shields.io/pub/v/terminalgpt.svg" alt="Pub.dev Badge"></a>
+	<a href="https://opensource.org/licenses/MIT" rel="noopener" target="_blank"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="MIT License Badge"></a>
+</p>
+
+
 
 https://user-images.githubusercontent.com/65209850/226115287-33c1b39c-5350-42d4-8a9e-09049ac87a1e.mp4
 
