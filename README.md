@@ -36,6 +36,14 @@ For easy access on your system from anywhere, activate the tGPT globally on your
 ```
 > dart pub global activate --source path .
 ```
+
+You can also activate the pub.dev version,
+
+```DART
+
+dart pub global activate terminalgpt
+
+```
 Once activated, you can use it as follow,
 
 ```
