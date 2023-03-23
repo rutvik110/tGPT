@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
+import 'package:cli_util/cli_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:mason_logger/mason_logger.dart';
 import 'package:path/path.dart' as path;
@@ -21,7 +22,8 @@ void main(List<String> arguments) async {
   logger.write('\nWelcome to tGPT!\n');
 
   var parser = ArgParser();
-  appDir = Directory.systemTemp;
+  appDir = await Directory(applicationConfigHome("terminal_gpt_dart_cli"))
+      .create(recursive: true);
 
   parser.addOption('input', abbr: 'i');
   parser.addFlag('model', abbr: "m", negatable: false);

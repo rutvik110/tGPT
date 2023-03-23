@@ -17,3 +17,4 @@ dependencies:
   mason_logger: ^0.2.5
   process_run: ^0.12.5+2
   path: ^1.8.0
+  cli_util: ^0.4.0
