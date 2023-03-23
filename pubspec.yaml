@@ -1,6 +1,6 @@
 name: terminalgpt
 description: Access ChatGPT from your terminal.
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/rutvik110/tGPT
 
 environment:
